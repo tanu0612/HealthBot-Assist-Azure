@@ -1,0 +1,40 @@
+
+---
+
+#### **File 2: `app.py` (Sample Flask Backend)**
+```python
+from flask import Flask, request, jsonify
+from azure.cognitiveservices.language.luis.runtime import LUISRuntimeClient
+from azure.ai.translation.text import TextTranslationClient
+
+app = Flask(__name__)
+
+# Initialize Azure clients (replace with your keys)
+LUIS_KEY = "your-luis-key"
+TRANSLATOR_KEY = "your-translator-key"
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.json.get('message')
+    language = request.json.get('language', 'en')
+
+    # Step 1: Translate non-English input to English (if needed)
+    if language != 'en':
+        translator = TextTranslationClient(TRANSLATOR_KEY)
+        translated = translator.translate(user_message, to_lang="en")
+        user_message = translated[0].text
+
+    # Step 2: Analyze symptoms with LUIS
+    luis_client = LUISRuntimeClient(LUIS_KEY)
+    luis_result = luis_client.predict(user_message)
+
+    # Step 3: Generate response (simplified logic)
+    if "fever" in luis_result.top_intent:
+        response = "You may have a viral fever. Drink fluids and rest."
+    else:
+        response = "Describe your symptoms in more detail."
+
+    return jsonify({"response": response})
+
+if __name__ == '__main__':
+    app.run(debug=True)
