@@ -1,4 +1,0 @@
-cd HealthBot-Assist-Azure
-git add .
-git commit -m "Initial commit: Added core files"
-git push origin main
