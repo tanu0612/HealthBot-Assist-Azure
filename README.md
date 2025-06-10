@@ -19,3 +19,5 @@ An AI-powered chatbot to provide basic medical guidance in rural areas using Azu
 1. Clone the repo:
    ```bash
    git clone https://github.com/your-username/HealthBot-Assist-Azure.git
+pip install -r requirements.txt
+python app.py
